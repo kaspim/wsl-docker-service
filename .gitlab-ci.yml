@@ -19,7 +19,7 @@ build:
     - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker-compose.py --distpath assets/windows"
     - DOCKER_BUILDKIT=1 docker build --no-cache --output type=tar,dest=image/wsl-docker-service.tar .
   artifacts:
-    expire_in: 1 week
+    expire_in: 1 month
     paths:
       - assets/
       - image/
@@ -41,7 +41,7 @@ publish:
     ref: "$CI_COMMIT_SHA"
     assets:
       links:
-        - name: "docker alia binary"
+        - name: "docker alias binary"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker.exe"
         - name: "docker-compose alias binary"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker-compose.exe"
