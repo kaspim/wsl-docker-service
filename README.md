@@ -26,3 +26,13 @@
 - ``` wsl --unregister wsl-docker-service ```
 
 </details>
+
+## Usage notes
+<details>
+<summary>JetBrains IDEs</summary>
+
+### JetBrains IDEs
+![Connection settings](assets/docker_jetbrains_01.jpg?raw=true)
+![Tool settings](assets/docker_jetbrains_02.jpg?raw=true)
+
+</details>
