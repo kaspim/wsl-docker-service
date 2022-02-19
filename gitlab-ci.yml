@@ -1,0 +1,45 @@
+stages:
+  - build
+  - release
+
+build:
+  stage: build
+  image: docker:latest
+  only:
+    - main
+  services:
+    - docker:dind
+  before_script:
+    echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
+  script:
+    - mkdir -p dist/windows
+    - mkdir -p image
+    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker.py --distpath dist/windows"
+    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker-compose.py --distpath dist/windows"
+    - DOCKER_BUILDKIT=1 docker build --no-cache --output type=tar,dest=image/wsl-docker-service.tar .
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - assets/
+      - image/
+    reports:
+      dotenv: build.env
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  only:
+    - main
+  needs:
+    - job: build
+      artifacts: true
+  release:
+    tag_name: "$CI_COMMIT_SHORT_SHA"
+    assets:
+      links:
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
+        - name: "docker alia binary"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
+        - name: "docker-compose alias binary"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
+        - name: "wsl2 image"
