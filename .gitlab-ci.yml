@@ -7,12 +7,14 @@ build:
   image: docker:latest
   only:
     - main
+  rules:
+    - if: $CI_COMMIT_TAG
   services:
     - docker:dind
   before_script:
     - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
   script:
-    - echo "Running build job for $CI_COMMIT_SHA"
+    - echo "Running build job for $CI_COMMIT_TAG"
     - mkdir -p assets/windows
     - mkdir -p image
     - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker.py --distpath assets/windows"
@@ -33,11 +35,11 @@ publish:
     - job: build
       artifacts: true
   script:
-    - echo "Running publish job for $CI_COMMIT_SHA"
+    - echo "Running publish job for $CI_COMMIT_TAG"
   release:
-    name: "WSL2 Docker Service $CI_COMMIT_SHORT_SHA"
+    name: "WSL2 Docker Service $CI_COMMIT_TAG"
     description: "Image and binaries for use Docker in WSL2"
-    tag_name: "$CI_COMMIT_SHORT_SHA"
+    tag_name: "$CI_COMMIT_TAG"
     ref: "$CI_COMMIT_SHA"
     assets:
       links:
