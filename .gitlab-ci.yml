@@ -44,8 +44,8 @@ publish:
     assets:
       links:
         - name: "docker.exe"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
+          url: "https://gitlab.com/kaspim/wsl-docker-service/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
         - name: "docker-compose.exe"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
+          url: "https://gitlab.com/kaspim/wsl-docker-service/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
         - name: "wsl-docker-service.tar"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
+          url: "https://gitlab.com/kaspim/wsl-docker-service/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
