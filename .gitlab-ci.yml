@@ -43,9 +43,9 @@ publish:
     ref: "$CI_COMMIT_SHA"
     assets:
       links:
-        - name: "docker alias binary"
+        - name: "docker.exe"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker.exe"
-        - name: "docker-compose alias binary"
+        - name: "docker-compose.exe"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker-compose.exe"
-        - name: "wsl2 image"
+        - name: "wsl-docker-service.tar"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
