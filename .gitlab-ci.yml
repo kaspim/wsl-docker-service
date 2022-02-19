@@ -10,7 +10,7 @@ build:
   services:
     - docker:dind
   before_script:
-    echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
+    - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
   script:
     - mkdir -p dist/windows
     - mkdir -p image
