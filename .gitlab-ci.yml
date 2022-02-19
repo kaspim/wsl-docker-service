@@ -12,6 +12,7 @@ build:
   before_script:
     - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
   script:
+    - echo "Running build job for $CI_COMMIT_SHA"
     - mkdir -p dist/windows
     - mkdir -p image
     - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker.py --distpath dist/windows"
@@ -28,20 +29,21 @@ build:
 publish:
   stage: publish
   image: registry.gitlab.com/gitlab-org/release-cli:latest
-  only:
-    - main
   needs:
-    - job: build
+    - job: build_job
       artifacts: true
+  script:
+    - echo "Running publish job for $CI_COMMIT_SHA"
   release:
     name: "WSL2 Docker Service $CI_COMMIT_SHORT_SHA"
     description: "Image and binaries for use Docker in WSL2"
     tag_name: "$CI_COMMIT_SHORT_SHA"
+    ref: "$CI_COMMIT_SHA"
     assets:
       links:
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
         - name: "docker alia binary"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
         - name: "docker-compose alias binary"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
         - name: "wsl2 image"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
