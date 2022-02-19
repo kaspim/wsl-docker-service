@@ -13,15 +13,15 @@ build:
     - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
   script:
     - echo "Running build job for $CI_COMMIT_TAG"
-    - mkdir -p assets/windows
+    - mkdir -p dist/windows
     - mkdir -p image
-    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker.py --distpath assets/windows"
-    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker-compose.py --distpath assets/windows"
+    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker.py --distpath dist/windows"
+    - docker run --rm -v "$(pwd):/src/" "cdrx/pyinstaller-windows:python3" "pyinstaller --onefile src/windows/docker-compose.py --distpath dist/windows"
     - DOCKER_BUILDKIT=1 docker build --no-cache --output type=tar,dest=image/wsl-docker-service.tar .
   artifacts:
     expire_in: 1 month
     paths:
-      - assets/
+      - dist/
       - image/
     reports:
       dotenv: build.env
@@ -44,8 +44,8 @@ publish:
     assets:
       links:
         - name: "docker.exe"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker.exe"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker.exe"
         - name: "docker-compose.exe"
-          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/assets/windows/docker-compose.exe"
+          url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/windows/docker-compose.exe"
         - name: "wsl-docker-service.tar"
           url: "https://gitlab.com/codemancers/engineering/cw/-/jobs/${BUILD_JOB_ID}/artifacts/file/image/wsl-docker-service.tar"
