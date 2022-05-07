@@ -8,5 +8,9 @@ if __name__ == '__main__':
     if len(arguments) > 0:
         del arguments[0]
 
-    cp = subprocess.run(command + arguments, capture_output=True)
-    print(cp.stdout.decode('utf-8'))
+    try:
+        proc = subprocess.Popen(command + arguments, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout, stderr = proc.communicate()
+        print(stdout.decode('utf-8'))
+    except KeyboardInterrupt:
+        proc.terminate()
