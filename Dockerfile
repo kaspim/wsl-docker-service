@@ -7,7 +7,14 @@ ARG DOCKER_DEFAULT_PASS="docker"
 
 RUN apk update \
     && apk upgrade \
-    && apk add sudo shadow bash docker docker-compose
+    && apk add sudo  \
+    shadow \
+    bash \
+    docker \
+    docker-compose \
+    bash-completion \
+    docker-bash-completion \
+    docker-compose-bash-completion
 
 RUN sed -i -e "s/^\(docker:x\):[^:]\+/\1:2509/" /etc/group \
     && groupmod -g 2509 docker \
@@ -19,7 +26,7 @@ RUN adduser -s /bin/bash --gecos "" --disabled-password $DOCKER_DEFAULT_USER \
     && echo "$DOCKER_DEFAULT_USER:$DOCKER_DEFAULT_PASS" | chpasswd \
     && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
 
-RUN echo -e "[user]\ndefault=\"$DOCKER_DEFAULT_USER\"" > /etc/wsl.conf
+RUN echo -e "[user]\ndefault=\"$DOCKER_DEFAULT_USER\"\n" > /etc/wsl.conf
 
 RUN mkdir -pm u=rwx,go=rx /etc/docker/ \
     && mkdir -pm u=rwx,go=x /var/lib/docker \
@@ -49,6 +56,7 @@ RUN touch /usr/bin/docker-initialize \
     && echo "fi" >> /usr/bin/docker-initialize
 
 RUN touch /home/$DOCKER_DEFAULT_USER/.profile \
+    && echo -e "cd ~\n" >> /home/$DOCKER_DEFAULT_USER/.profile \
     && echo -e "if [ -d \"$HOME/bin\" ]; then\n  PATH=\"$HOME/bin:$PATH\"\nfi\n" >> /home/$DOCKER_DEFAULT_USER/.profile \
     && echo -e "if [ -d \"$HOME/.local/bin\" ]; then\n  PATH=\"$HOME/.local/bin:$PATH\"\nfi\n" >> /home/$DOCKER_DEFAULT_USER/.profile \
     && echo -e "docker-start > /dev/null" >> /home/$DOCKER_DEFAULT_USER/.profile \
